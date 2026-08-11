@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# 如需提交站点地图，取消下一行注释并替换为你的实际地址：
+# Sitemap: https://your-domain.example/sitemap.xml

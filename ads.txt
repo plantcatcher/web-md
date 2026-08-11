@@ -1,0 +1,7 @@
+# ads.txt — Google AdSense 授权文件
+# 功能：声明本网站授权哪些广告系统销售其广告位，防止广告欺诈。
+# 部署：将此文件放在网站根目录（与 index.html 同级），可通过 https://你的域名/ads.txt 访问。
+#
+# 请将下面一行的发布商 ID 替换为你自己的 AdSense 发布商 ID（ca-pub-xxxxxxxxxxxxxxxx）。
+# 替换后删除本行注释与示例值即可。未替换前（占位值）不会生效。
+google.com, ca-pub-0000000000000000, DIRECT, f08c47fec0942fa0

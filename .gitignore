@@ -1,0 +1,11 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# local temp / logs
+*.log
+*.local
+
+# keep node_modules out if any tooling added later
+node_modules/

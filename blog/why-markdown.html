@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>为什么 AI 需要 Markdown · Everything to Markdown</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <a class="brand" href="../index.html" aria-label="Everything to Markdown">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+              <rect x="3" y="3" width="18" height="18" rx="5" fill="var(--accent)" />
+              <path d="M8 8h8M8 12h8M8 16h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="brand-name">Everything to Markdown</span>
+          <span class="brand-sub">by 星球小捕手</span>
+        </a>
+        <nav class="nav">
+          <a href="../index.html">首页</a>
+          <a href="blog.html">博客</a>
+          <a href="../privacy.html">隐私</a>
+          <a href="https://github.com/firecrawl/anydoc" target="_blank" rel="noopener">开源模型</a>
+        </nav>
+      </header>
+
+      <main>
+        <article class="post">
+          <p class="post-meta">为什么 · 2026-08-11</p>
+          <h1>为什么 AI 需要 Markdown：资料形态与"可读"的含义</h1>
+          <div class="markdown-body">
+            <p>你大概有过这样的经历：从一份 Word 里选中一段，复制，粘进聊天框或某个 AI 对话框，结果排版全乱、表格变成乱码、图片失踪，只剩一堆奇怪的换行和空格。这并不是你操作错了，而是——<strong>大多数"资料"天生不是给机器读的</strong>。</p>
+
+            <h2>资料的两副面孔</h2>
+            <p>一份 .docx 文件，对人类和对于程序，是完全不同的两样东西。</p>
+            <p>对人来说，它是"带格式的文档"：标题加粗、段落缩进、表格对齐、配图居中。你一眼就能读懂它的<em>意图</em>。但对一个大模型来说，它首先是一堆 ZIP 压缩包里的 XML 节点，里面混着样式定义、修订记录、嵌入字体、缩略图……真正"内容"被埋在噪声里。</p>
+            <blockquote>AI 不关心你的标题用了几号字体，它关心的是：这句话是标题还是正文？这条数据属于哪一行哪一列？这段引用是谁说的？</blockquote>
+
+            <h2>Markdown 为什么是"机器友好"的格式</h2>
+            <p>Markdown 之所以成为 AI 工作流里的通用语，不是因为它时髦，而是因为它同时满足三件事：</p>
+            <ul>
+              <li><strong>结构化</strong>：<code>#</code>、<code>-</code>、<code>|</code> 这些符号明确表达了层级、列表、表格，而不是靠视觉位置暗示。</li>
+              <li><strong>低噪声</strong>：没有字体、颜色、页眉页脚这些与"意思"无关的信息，token 花在刀刃上。</li>
+              <li><strong>纯文本</strong>：任何系统都能读、能存、能检索、能 diff，不依赖特定软件。</li>
+            </ul>
+            <p>把一份资料转成 Markdown，本质上是一次<strong>翻译</strong>：从"给人看的排版"翻译成"给机器读的结构"。这正是 Everything to Markdown 在做的事。</p>
+
+            <h2>一个具体的对比</h2>
+            <p>假设有一张销售表，原文件是 Excel。如果直接把单元格文本平铺丢给模型：</p>
+            <pre><code>一月 二月 三月
+北方 120 135 150
+南方 98 110 130</code></pre>
+            <p>模型得"猜"哪行是表头、哪列对应哪月。而 Markdown 表格：</p>
+            <pre><code>| 区域 | 一月 | 二月 | 三月 |
+| --- | --- | --- | --- |
+| 北方 | 120 | 135 | 150 |
+| 南方 | 98 | 110 | 130 |</code></pre>
+            <p>结构一目了然。对 AI 而言，后者不是"更好看"，而是<strong>更少误解、更少幻觉</strong>。</p>
+
+            <h2>所以，"转成 Markdown"到底转了什么</h2>
+            <p>不是把字抠出来那么简单。它转的是<strong>语义关系</strong>：</p>
+            <ul>
+              <li>这行是标题还是正文？</li>
+              <li>这几段是一个列表，还是各自独立的句子？</li>
+              <li>这个数字是表格里的单元格，还是正文里的举例？</li>
+              <li>这张图配在哪一节，说明什么？</li>
+            </ul>
+            <p>能回答好这些问题，资料才真正"可读"。这也是为什么 we 坚持把转换做成一条确定性的解析管线，而不是交给一个黑盒去"理解"。</p>
+
+            <h2>小结</h2>
+            <p>AI 需要的不是"更多的字"，而是<strong>更干净、更有结构的字</strong>。Markdown 恰好是人和机器之间那座最省力的桥。下一篇，我们拆开看：14 种天差地别的格式，是怎么被统一成这一套 Markdown 的。</p>
+          </div>
+          <p class="post-nav"><a href="blog.html">← 返回博客列表</a> · <a href="unified-model.html">下一篇：统一文档模型 →</a></p>
+        </article>
+      </main>
+
+      <!-- 广告位：接入 Google AdSense 后，将 data-ad-client 替换为你的发布商 ID，并在 cookie-consent.js 配置 ADSENSE_PUB_ID；仅用户同意后才加载 -->
+      <section class="ad-slot" aria-label="广告">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-0000000000000000"
+             data-ad-slot="0000000000"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </section>
+
+      <footer class="footer">
+        <span>© 2026 星球小捕手 · 基于开源模型</span>
+        <a href="../privacy.html">隐私政策</a>
+        <a href="../terms.html">使用条款</a>
+        <a href="#" id="cc-manage">Cookie 设置</a>
+        <span class="footer-sep">·</span>
+        <a href="https://github.com/firecrawl/anydoc" target="_blank" rel="noopener">开源模型 Firecrawl anydoc</a>
+        <span class="footer-sep">·</span>
+        <span>Powered by Rust → WebAssembly</span>
+      </footer>
+    </div>
+    <script src="../cookie-consent.js"></script>
+  </body>
+</html>

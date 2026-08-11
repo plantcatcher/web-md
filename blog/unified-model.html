@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>统一文档模型 · Everything to Markdown</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <a class="brand" href="../index.html" aria-label="Everything to Markdown">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+              <rect x="3" y="3" width="18" height="18" rx="5" fill="var(--accent)" />
+              <path d="M8 8h8M8 12h8M8 16h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="brand-name">Everything to Markdown</span>
+          <span class="brand-sub">by 星球小捕手</span>
+        </a>
+        <nav class="nav">
+          <a href="../index.html">首页</a>
+          <a href="blog.html">博客</a>
+          <a href="../privacy.html">隐私</a>
+          <a href="https://github.com/firecrawl/anydoc" target="_blank" rel="noopener">开源模型</a>
+        </nav>
+      </header>
+
+      <main>
+        <article class="post">
+          <p class="post-meta">架构 · 2026-08-11</p>
+          <h1>统一文档模型：14 种格式如何归一为一套 Markdown</h1>
+          <div class="markdown-body">
+            <p>Word 是 XML 包，PPT 是另一套 XML 包，Excel 又不一样，RTF 是纯文本控制字，PDF 是页面描述语言，EPUB 是打包的网页……<strong>14 种格式，14 套内部结构</strong>。要把它们都变成同一种 Markdown，最直白的思路是：为每种格式写一个"专属转换器"。但这条路会很快塌掉。</p>
+
+            <h2>逐格式硬编码的坑</h2>
+            <p>设想你为 .docx 写了一堆规则：找 <code>w:body</code>、解析 <code>w:p</code>、处理 <code>w:tbl</code>……再为 .pptx 另写一套，为 .xlsx 又一套。问题立刻来了：</p>
+            <ul>
+              <li><strong>维护爆炸</strong>：14 种格式 × 各自的边界情况，代码量呈指数增长。</li>
+              <li><strong>表现不一致</strong>：同一份"二级标题"，在 Word 和 PowerPoint 里可能转出来长得不一样。</li>
+              <li><strong>新增即重写</strong>：每支持一种格式，几乎要从头再来。</li>
+            </ul>
+            <p>Everything to Markdown 借鉴的开源模型，用的是另一条更优雅的路：<strong>先归一，再输出</strong>。</p>
+
+            <h2>两步走：解析 → 序列化</h2>
+            <p>整条管线分两个阶段，中间夹着一个关键的东西——<strong>统一文档模型</strong>。</p>
+            <pre><code>原始文件 ──(解析器 A/B/C…)──▶ 统一文档模型 ──(序列化器)──▶ Markdown
+  .docx         各自不同           一份结构化表示      唯一一套规则
+  .pptx   ────────┘
+  .xlsx   ────────┘</code></pre>
+
+            <h3>第一步：解析进同一个模型</h3>
+            <p>每种格式有自己的解析器，但它们的<strong>输出目标一致</strong>：都填进同一个"文档模型"。这个模型只关心语义，不关心来源：</p>
+            <ul>
+              <li>有<strong>标题</strong>，以及它的层级（h1/h2/h3…）</li>
+              <li>有<strong>段落</strong>、<strong>列表</strong>（有序/无序/嵌套）</li>
+              <li>有<strong>表格</strong>（含合并单元格）</li>
+              <li>有<strong>强调</strong>（粗体/斜体）、<strong>链接</strong>、<strong>图片</strong></li>
+              <li>有<strong>脚注</strong>、<strong>引用</strong>等元信息</li>
+            </ul>
+            <p>于是 .docx 的 <code>w:pStyle w:val="Heading2"</code>，和 .pptx 里某个被判定为标题的文本框，在模型里都只是"一个二级标题"。<strong>来源的差异，在第一步就被消化掉了。</strong></p>
+
+            <h3>第二步：一套序列化器打天下</h3>
+            <p>因为模型是统一的，输出 Markdown 时只需要<strong>一套规则</strong>：标题怎么写、列表怎么写、表格怎么写。无论资料来自 2003 年的老 .doc 还是昨天下载的 .pptx，出来的 Markdown 风格完全一致。</p>
+            <blockquote>这就像把英语、法语、日语都先翻译成"世界语"，再从世界语译成一门目标语言——中间那步统一了，后面就简单了。</blockquote>
+
+            <h2>为什么这件事很重要</h2>
+            <p>对使用者而言，统一模型带来的直接好处是<strong>可预测</strong>：你不用记"Word 转出来长这样、Excel 转出来长那样"。同一套逻辑处理所有格式，意味着：</p>
+            <ul>
+              <li>一个格式的 bug 修复，往往惠及所有格式；</li>
+              <li>新格式接入时，只需写"如何填进模型"，不用碰输出逻辑；</li>
+              <li>AI 拿到的 Markdown 始终是同一种"方言"，更容易稳定消费。</li>
+            </ul>
+
+            <h2>小结</h2>
+            <p>"先归一，再输出"是 Everything to Markdown 能把 14 种格式都转好的底层原因。下一篇，我们反过来问一个更接地气的问题：在解析之前，程序<em>怎么知道</em>手里的文件到底是哪种格式？</p>
+          </div>
+          <p class="post-nav"><a href="why-markdown.html">← 上一篇：为什么 AI 需要 Markdown</a> · <a href="blog.html">返回列表</a> · <a href="format-detection.html">下一篇：格式识别 →</a></p>
+        </article>
+      </main>
+
+      <!-- 广告位：接入 Google AdSense 后，将 data-ad-client 替换为你的发布商 ID，并在 cookie-consent.js 配置 ADSENSE_PUB_ID；仅用户同意后才加载 -->
+      <section class="ad-slot" aria-label="广告">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-0000000000000000"
+             data-ad-slot="0000000000"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </section>
+
+      <footer class="footer">
+        <span>© 2026 星球小捕手 · 基于开源模型</span>
+        <a href="../privacy.html">隐私政策</a>
+        <a href="../terms.html">使用条款</a>
+        <a href="#" id="cc-manage">Cookie 设置</a>
+        <span class="footer-sep">·</span>
+        <a href="https://github.com/firecrawl/anydoc" target="_blank" rel="noopener">开源模型 Firecrawl anydoc</a>
+        <span class="footer-sep">·</span>
+        <span>Powered by Rust → WebAssembly</span>
+      </footer>
+    </div>
+    <script src="../cookie-consent.js"></script>
+  </body>
+</html>

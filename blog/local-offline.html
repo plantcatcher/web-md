@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>本地转换 · Everything to Markdown</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <a class="brand" href="../index.html" aria-label="Everything to Markdown">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+              <rect x="3" y="3" width="18" height="18" rx="5" fill="var(--accent)" />
+              <path d="M8 8h8M8 12h8M8 16h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="brand-name">Everything to Markdown</span>
+          <span class="brand-sub">by 星球小捕手</span>
+        </a>
+        <nav class="nav">
+          <a href="../index.html">首页</a>
+          <a href="blog.html">博客</a>
+          <a href="../privacy.html">隐私</a>
+          <a href="https://github.com/firecrawl/anydoc" target="_blank" rel="noopener">开源模型</a>
+        </nav>
+      </header>
+
+      <main>
+        <article class="post">
+          <p class="post-meta">隐私 · 2026-08-11</p>
+          <h1>为什么转换应该发生在你的浏览器里</h1>
+          <div class="markdown-body">
+            <p>大多数"文档转 Markdown"工具的工作方式是：你把文件上传到它们的服务器，服务器转好，再把结果发回来。这很方便，但也意味着——<strong>在你按下"转换"的那一刻，资料已经离开了你的电脑</strong>。对一份公开的说明文档无所谓，但对公司财报、未公开合同、个人笔记，这就是另一种性质的事了。</p>
+
+            <h2>两条路线的差别</h2>
+            <table>
+              <thead>
+                <tr><th>维度</th><th>上传到服务器</th><th>浏览器本地（Everything to Markdown）</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>文件去向</td><td>离开你的设备，到达第三方</td><td>始终留在本地</td></tr>
+                <tr><td>隐私风险</td><td>取决于对方的数据政策与合规</td><td>无第三方经手，风险趋近于零</td></tr>
+                <tr><td>延迟</td><td>网络往返 + 排队</td><td>本地计算，毫秒级</td></tr>
+                <tr><td>离线可用</td><td>不行</td><td>加载一次后完全离线</td></tr>
+                <tr><td>规模成本</td><td>对方要养服务器</td><td>算力由你的设备承担</td></tr>
+              </tbody>
+            </table>
+
+            <h2>WebAssembly 让"本地"变现实</h2>
+            <p>过去，"在浏览器里跑复杂转换"听起来不靠谱——浏览器是跑界面脚本的地方，不是跑文档解析器的地方。但 <strong>WebAssembly（WASM）</strong>改变了这一点：它让用 Rust 之类语言写的高性能代码，能被编译成一种浏览器能高效执行的字节码。</p>
+            <p>Everything to Markdown 借鉴的开源模型，正是把整套 Rust 解析/序列化管线编译成了 WASM。于是：</p>
+            <ul>
+              <li>首次打开页面时，下载几 MB 的 WASM 模块到本地；</li>
+              <li>之后每一次转换，都在这台设备上完成；</li>
+              <li>甚至断网后，只要页面还在，转换照常工作。</li>
+            </ul>
+            <blockquote>没有服务器，就没有"资料上传"这一说。隐私不是靠承诺，而是靠架构从根上消除了上传动作。</blockquote>
+
+            <h2>快，是本地化的副产品</h2>
+            <p>本地转换的另一个红利是<strong>速度</strong>。一篇文档的转换，中位时间不到 5 毫秒——比一次网络请求的往返还短几个数量级。你拖进去，结果几乎瞬间出现，没有"上传中…""转换中…"的等待。</p>
+            <p>更妙的是，<strong>没有服务端就意味着没有并发上限</strong>：你转一份和转一百份，对"服务器"都没有压力，因为根本没有服务器参与。</p>
+
+            <h2>代价与边界</h2>
+            <p>本地路线也不是万能的，得说清楚：</p>
+            <ul>
+              <li><strong>首次需联网</strong>加载 WASM（之后可缓存离线）；</li>
+              <li><strong>极个别超大型文件</strong>受限于浏览器内存，不如服务器端能横向扩展；</li>
+              <li><strong>扫描型 PDF 的 OCR</strong> 这类重计算，本地 WASM 不擅长（见下一篇）。</li>
+            </ul>
+            <p>但对"把各种资料转成 Markdown"这个核心场景，本地化几乎是全面占优：更快、更私密、可离线、零运维。</p>
+
+            <h2>小结</h2>
+            <p>Everything to Markdown 把转换放进你的浏览器，不是偷懒，而是刻意的取舍：<strong>用架构换取隐私与速度</strong>。下一篇，我们把视线收束到最棘手的一种格式——PDF，看看本地路线的边界到底卡在哪里。</p>
+          </div>
+          <p class="post-nav"><a href="format-detection.html">← 上一篇：格式识别</a> · <a href="blog.html">返回列表</a> · <a href="pdf-boundary.html">下一篇：PDF 的边界 →</a></p>
+        </article>
+      </main>
+
+      <!-- 广告位：接入 Google AdSense 后，将 data-ad-client 替换为你的发布商 ID，并在 cookie-consent.js 配置 ADSENSE_PUB_ID；仅用户同意后才加载 -->
+      <section class="ad-slot" aria-label="广告">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-0000000000000000"
+             data-ad-slot="0000000000"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </section>
+
+      <footer class="footer">
+        <span>© 2026 星球小捕手 · 基于开源模型</span>
+        <a href="../privacy.html">隐私政策</a>
+        <a href="../terms.html">使用条款</a>
+        <a href="#" id="cc-manage">Cookie 设置</a>
+        <span class="footer-sep">·</span>
+        <a href="https://github.com/firecrawl/anydoc" target="_blank" rel="noopener">开源模型 Firecrawl anydoc</a>
+        <span class="footer-sep">·</span>
+        <span>Powered by Rust → WebAssembly</span>
+      </footer>
+    </div>
+    <script src="../cookie-consent.js"></script>
+  </body>
+</html>
