@@ -77,10 +77,9 @@
     b.setAttribute('role', 'dialog');
     b.setAttribute('aria-label', 'Cookie 同意');
     b.innerHTML =
-      '<p class="cc-text">我们使用 Cookie 让网站正常运行，并在您同意后用于分析流量与展示相关广告。' +
-      '<strong>必要的 Cookie</strong>用于网站功能；<strong>分析 Cookie</strong>（Google Analytics）与' +
-      '<strong>广告 Cookie</strong>（含 Google AdSense）仅在您同意后使用。' +
-      '详见<a href="' + base + 'privacy.html">隐私政策</a>。</p>' +
+      '<p class="cc-text">为保障本网站的正常运行并持续优化您的访问体验，我们使用 Cookie。' +
+      '其中<strong>必要的 Cookie</strong>为网站功能所必需；<strong>其他 Cookie</strong>仅会在获得您的同意后启用。' +
+      '了解更多信息，请查阅我们的<a href="' + base + 'privacy.html">隐私政策</a>。</p>' +
       '<div class="cc-actions">' +
       '<button type="button" class="cc-btn" id="cc-reject">仅必要</button>' +
       '<button type="button" class="cc-btn primary" id="cc-accept">接受全部</button>' +

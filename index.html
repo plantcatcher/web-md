@@ -44,6 +44,11 @@
             一键转成干净、结构化、AI 可直接读取的 Markdown 文件。
             基于开源模型，在浏览器本地运行，文件永远不离开你的电脑。
           </p>
+          <ul class="hero-trust" aria-label="核心特性">
+            <li>本地运行 · 文件不上传</li>
+            <li>开源模型 · MIT 许可</li>
+            <li>中位转换 &lt; 5 毫秒</li>
+          </ul>
           <ul class="format-chips" aria-label="支持格式">
             <li>.doc</li><li>.docx</li><li>.docm</li><li>.ppt</li><li>.pptx</li>
             <li>.xls</li><li>.xlsx</li><li>.odt</li><li>.ods</li><li>.odp</li>
@@ -79,7 +84,7 @@
             Everything to Markdown 不靠上传服务器，也不靠机器学习模型去"猜"内容，而是用一条<strong>确定性的解析管线</strong>：
             先把不同格式还原成结构化文本，再序列化成 Markdown。下面四点是它的核心思路。
           </p>
-          <div class="facts">
+          <dl class="facts">
             <div class="fact">
               <dt>统一文档模型</dt>
               <dd>每种格式先被解析进<strong>同一个中间文档模型</strong>——标题、段落、列表、表格、脚注都有统一表示，再走同一套 Markdown 序列化器。所以无论来源是 2003 年的 .doc 还是昨天的 .pptx，层级与嵌套表现都一致。</dd>
@@ -96,7 +101,7 @@
               <dt>PDF 的边界</dt>
               <dd>文本型 PDF 通过本地解析提取文字层；<strong>扫描型（图片）PDF 没有文字层</strong>，需要 OCR 才能转，这超出了本地管线的范围。其余 13 种均为结构化文档，可完美转换。</dd>
             </div>
-          </div>
+          </dl>
           <p class="more-link"><a href="blog.html">阅读更多原理文章 →</a></p>
         </section>
 
