@@ -2,7 +2,7 @@
  * Cookie 同意与广告加载（合规：GDPR / ePrivacy）
  * - 首次访问弹出横幅，区分「必要 Cookie」与「广告 Cookie」
  * - 仅在用户「接受全部」后，才动态加载 Google AdSense 广告脚本
- * - 拒绝则只保留必要功能，不加载任何广告/追踪脚本
+ * - 拒绝则只保留必要功能与 Google Analytics（始终加载），不加载广告脚本
  * - 状态保存在 localStorage，用户可通过页脚「Cookie 设置」重新选择
  *
  * 接入 AdSense 时请修改下方 ADSENSE_PUB_ID 为你自己的发布商 ID
@@ -13,7 +13,6 @@
 
   var STORAGE_KEY = 'etm_cookie_consent';
   var ADSENSE_PUB_ID = 'ca-pub-0000000000000000'; // TODO: 替换为你的 Google AdSense 发布商 ID
-  var GA_MEASUREMENT_ID = 'G-VJLJ6NM3G4'; // Google Analytics 4 衡量 ID（替换为你自己的）
 
   function basePath() {
     return location.pathname.indexOf('/blog/') !== -1 ? '../' : '';
@@ -45,19 +44,6 @@
     });
   }
 
-  function loadAnalytics() {
-    if (!GA_MEASUREMENT_ID) return;
-    var s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=' +
-      encodeURIComponent(GA_MEASUREMENT_ID);
-    document.head.appendChild(s);
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', GA_MEASUREMENT_ID);
-  }
-
   function showBanner() {
     var b = document.getElementById('cc-banner');
     if (!b) buildBanner();
@@ -86,7 +72,7 @@
       '</div>';
     document.body.appendChild(b);
     document.getElementById('cc-accept').addEventListener('click', function () {
-      setConsent('accepted'); hideBanner(); loadAnalytics(); loadAdSense();
+      setConsent('accepted'); hideBanner(); loadAdSense();
     });
     document.getElementById('cc-reject').addEventListener('click', function () {
       setConsent('rejected'); hideBanner();
@@ -96,7 +82,7 @@
   function init() {
     var c = getConsent();
     if (c === 'accepted') {
-      loadAnalytics(); loadAdSense();
+      loadAdSense();
     } else if (c !== 'rejected') {
       buildBanner();
     }

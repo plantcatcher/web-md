@@ -98,14 +98,14 @@ anydoc-web/
 | --- | --- |
 | `privacy.html` | 隐私政策：文件本地处理不上传、Cookie 分类、AdSense 个性化广告与其退出方式（Google 广告设置 / aboutads.info）、儿童隐私、用户权利 |
 | `terms.html` | 使用条款：服务描述、免责声明、知识产权（基于 Firecrawl anydoc）、责任限制、适用法律 |
-| `cookie-consent.js` | 首次访问弹出同意横幅，**仅用户「接受全部」后才动态加载 Google Analytics 与 AdSense 脚本**；「仅必要」则不加载任何分析/广告/追踪；选择存 localStorage，页脚「Cookie 设置」可重新选择 |
+| `cookie-consent.js` | 首次访问弹出同意横幅，**仅用户「接受全部」后才动态加载 Google AdSense 广告脚本**；Google Analytics 已以静态 gtag 代码写入各页面 `<head>`，始终加载。选择存 localStorage，页脚「Cookie 设置」可重新选择 |
 | `ads.txt` | AdSense 授权文件，声明本站的广告销售方，防广告欺诈 |
 
 ### 接入前需替换的占位项
 
 1. **Google Analytics 衡量 ID**
-   - `cookie-consent.js` 第 16 行：`var GA_MEASUREMENT_ID = 'G-VJLJ6NM3G4';`
-   - 替换为你自己的 GA4 衡量 ID（形如 `G-XXXXXXXXXX`）。分析脚本仅在用户「接受全部」后加载。
+   - 已写入各页面 `<head>` 中的 gtag 代码：`G-VJLJ6NM3G4`（共 9 个 HTML 页面：首页、博客列表、隐私、条款、`blog/` 下 5 篇文章）。
+   - 替换为你自己的 GA4 衡量 ID（形如 `G-XXXXXXXXXX`）：在每个页面的 gtag 代码里把 `G-VJLJ6NM3G4` 改成你的 ID 即可（注意 `<script async src=...>` 与 `gtag('config', ...)` 两处都要改）。
 2. **发布商 ID（两处）**
    - `cookie-consent.js` 第 15 行：`var ADSENSE_PUB_ID = 'ca-pub-0000000000000000';`
    - 各页面广告位 `data-ad-client="ca-pub-0000000000000000"`（首页 `index.html`、博客列表 `blog.html`、`blog/` 下 5 篇文章）
@@ -116,4 +116,4 @@ anydoc-web/
 
 > 说明：发布商 ID 仍为占位值时，`cookie-consent.js` 不会加载任何广告脚本（即使点了「接受全部」），方便你先上线合规框架、拿到 AdSense 账号后再填真实 ID。
 > 注意：Google AdSense 要求网站具备实质性内容且符合其政策；本站博客（`blog/`）即为合规内容支撑。
-> 关于分析 Cookie 的合规：本站的 Google Analytics 与 AdSense 一样，**仅在用户「接受全部」后加载**，因此不会在未经同意的情况下设置跟踪 Cookie，与隐私政策一致。如希望即便拒绝也保留匿名建模数据，可改用 Google Consent Mode（在 `cookie-consent.js` 的 `loadAnalytics()` 中改为先 `gtag('consent','default',{analytics_storage:'denied'})` 再按同意更新）。
+> 关于分析 Cookie 的合规：本站采用「方案 A」——Google Analytics 以静态 gtag 代码写入各页面 `<head>`，**始终加载、不依赖 Cookie 同意**，以便 Google 设置助手能正常检测到代码；AdSense 广告脚本仍仅在点「接受全部」后加载。若需严格按「同意前不设置跟踪 Cookie」的要求，可改用 Google Consent Mode（在各页面 gtag 代码中先 `gtag('consent','default',{analytics_storage:'denied'})` 再于 `cookie-consent.js` 的「接受全部」里 `gtag('consent','update',{analytics_storage:'granted'})`）。
