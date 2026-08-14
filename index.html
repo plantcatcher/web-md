@@ -77,6 +77,27 @@
           </p>
         </section>
 
+        <!-- 转换结果（app.js 依赖这些元素，缺失会导致转换器脚本在加载阶段报错） -->
+        <section class="result" id="result" hidden>
+          <div class="result-bar">
+            <span class="file-name" id="result-name"></span>
+            <span class="format-badge" id="result-format"></span>
+            <span class="stats" id="result-stats"></span>
+            <span class="spacer"></span>
+            <div class="tabs">
+              <button type="button" class="tab active" id="tab-preview">预览</button>
+              <button type="button" class="tab" id="tab-raw">原始 Markdown</button>
+            </div>
+            <button type="button" class="btn" id="copy">复制</button>
+            <button type="button" class="btn btn-primary" id="download">下载 .md</button>
+          </div>
+          <div class="output-wrap">
+            <div class="preview" id="preview"></div>
+            <pre class="raw" id="raw" hidden><code></code></pre>
+            <div class="error-box" id="error" hidden></div>
+          </div>
+        </section>
+
         <!-- 原理（入口） -->
         <section class="info" id="how">
           <h2>它是怎么做到的</h2>
